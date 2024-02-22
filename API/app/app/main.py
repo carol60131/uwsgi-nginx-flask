@@ -60,6 +60,9 @@ def FlyTime():
 		sunriseTime = body['SunriseTime'] if 'SunriseTime' in keys else '06:00:00'
 		sunsetTime = body['SunsetTime'] if 'SunsetTime' in keys else '18:00:00'
 
+		# 比賽結束時間
+		endDT = body['EndDT']
+		
 		# 判斷是否計算夜間時間
 		isFix = body['IsFix'] if 'IsFix' in keys else 1
 
@@ -71,6 +74,9 @@ def FlyTime():
 		# 日出、日落時間
 		sunriseTime = request.args.get('SunriseTime', type=str, default='06:00:00')
 		sunsetTime = request.args.get('SunsetTime', type=str, default='18:00:00')
+	
+		# 比賽結束時間
+		endDT = request.args.get('EndDT', type=str)
 
 		# 判斷是否計算夜間時間
 		isFix = request.args.get('IsFix', type=int, default=1)
@@ -79,8 +85,9 @@ def FlyTime():
 	arrivalDT = dt.strptime(arrivalDT, '%Y-%m-%d %H:%M:%S')
 	sunriseTime = dt.strptime(sunriseTime, '%H:%M:%S')
 	sunsetTime = dt.strptime(sunsetTime, '%H:%M:%S')
+	endDT = dt.strptime(endDT, '%Y-%m-%d %H:%M:%S')
 
-	time = calFlyTime(liberationDT, arrivalDT, sunriseTime, sunsetTime, isFix)
+	time = calFlyTime(liberationDT, arrivalDT, sunriseTime, sunsetTime, endDT, isFix)
 	return 	'共飛行' + str(time) + '分鐘'
 
 

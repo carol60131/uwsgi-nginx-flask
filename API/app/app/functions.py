@@ -30,16 +30,23 @@ def calFlyDist2Unit(unit, flyDist):
 	return result
 
 
-def calFlyTime(liberationDT, arrivalDT, sunriseTime, sunsetTime, isFix):
+def calFlyTime(liberationDT, arrivalDT, sunriseTime, sunsetTime, endDT, isFix):
 
 	# 不計算夜間時間
 	if isFix == 1:
 
-		# 出發日期與抵達日期相同(抵達時間-出發時間)
-		if arrivalDT.date() == liberationDT.date():
-			result = arrivalDT - liberationDT
-			resMin = result.seconds / 60 
+		# 出發日期與抵達日期相同或出發日期與結束日期相同
+		if liberationDT.date() == arrivalDT.date() or liberationDT.date() == endDT.date():
+			
+			if liberationDT.date() == arrivalDT.date():
+				# 抵達時間-出發時間
+				result = arrivalDT - liberationDT
 
+			else:
+				# 結束時間-出發時間
+				result = endDT - liberationDT
+
+			resMin = result.seconds / 60 
 			return resMin		
 
 		else:
@@ -56,26 +63,38 @@ def calFlyTime(liberationDT, arrivalDT, sunriseTime, sunsetTime, isFix):
 				sunriseTime = sunriseTime + datetime.timedelta(days=1)
 				sunsetTime = sunsetTime + datetime.timedelta(days=1)
 				
-				if arrivalDT.date() == liberationDT.date():
+				# 出發日期與抵達日期相同或出發日期與結束日期相同
+				if liberationDT.date() == arrivalDT.date() or liberationDT.date() == endDT.date():
 					break
 
 				else:
 					# 日落時間-日出時間
 					result += sunsetTime - sunriseTime
 
-			# 抵達時間-日出時間(最後一日)
-			result += arrivalDT - sunriseTime
-			resMin = result.total_seconds() / 60 
+			# 最後一日
+			if liberationDT.date() == arrivalDT.date() and arrivalDT < endDT:
+				# 抵達時間-日出時間 
+				result += arrivalDT - sunriseTime
 
+			else:
+				# 結束時間-日出時間
+				result += endDT - sunriseTime
+
+			resMin = result.total_seconds() / 60 
 			return resMin
 
 	# 計算夜間時間
 	elif isFix == 2:
 
-		# 抵達時間-出發時間
-		result = arrivalDT - liberationDT
-		resMin = result.total_seconds() / 60 
+		if arrivalDT < endDT:
+			# 抵達時間-出發時間
+			result = arrivalDT - liberationDT
 
+		else:
+			# 結束時間-出發時間
+			result = endDT - liberationDT
+
+		resMin = result.total_seconds() / 60 
 		return resMin
 
 
