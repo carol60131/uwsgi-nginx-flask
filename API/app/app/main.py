@@ -23,15 +23,21 @@ def hello1():
 def FlyDist2Unit():
 	print('================FlyDist2Unit===================')
 	
-	# # 距離、單位 
-	# flyDist = request.args.get('FlyDist', type=float, default=1)
-	# unit = request.args.get('Unit', type=str, default='M')
+	try:
+		body = request.get_json()
+		keys = body.keys()
 
-	body = request.get_json()
-	keys = body.keys()
+		# 距離、單位 
+		flyDist = body['FlyDist'] if 'FlyDist' in keys else 1
+		unit = body['Unit'] if 'Unit' in keys else 'M'
 
-	flyDist = body['FlyDist'] if 'FlyDist' in keys else 1
-	unit = body['Unit'] if 'Unit' in keys else 'M'
+		# result = calFlyDist2Unit(unit, flyDist)
+		# return str(result)
+
+	except:
+		# 距離、單位 
+		flyDist = request.args.get('FlyDist', type=float, default=1)
+		unit = request.args.get('Unit', type=str, default='M')
 
 	result = calFlyDist2Unit(unit, flyDist)
 	return str(result)
@@ -42,25 +48,32 @@ def FlyDist2Unit():
 def FlyTime():
 	print('================FlyTime===================')
 
-	# # 出發、抵達時間
-	# liberationDT = request.args.get('LiberationDT', type=str)
-	# arrivalDT = request.args.get('ArrivalDT', type=str)
+	try:
+		body = request.get_json()
+		keys = body.keys()
 
-	# # 日出、日落時間
-	# sunriseTime = request.args.get('SunriseTime', type=str, default='06:00:00')
-	# sunsetTime = request.args.get('SunsetTime', type=str, default='18:00:00')
+		# 出發、抵達時間
+		liberationDT = body['LiberationDT']
+		arrivalDT = body['ArrivalDT']
 
-	# # 判斷是否計算夜間時間
-	# isFix = request.args.get('IsFix', type=int, default=1)
+		# 日出、日落時間
+		sunriseTime = body['SunriseTime'] if 'SunriseTime' in keys else '06:00:00'
+		sunsetTime = body['SunsetTime'] if 'SunsetTime' in keys else '18:00:00'
 
-	body = request.get_json()
-	keys = body.keys()
+		# 判斷是否計算夜間時間
+		isFix = body['IsFix'] if 'IsFix' in keys else 1
 
-	liberationDT = body['LiberationDT']
-	arrivalDT = body['ArrivalDT']
-	sunriseTime = body['SunriseTime'] if 'SunriseTime' in keys else '06:00:00'
-	sunsetTime = body['SunsetTime'] if 'SunsetTime' in keys else '18:00:00'
-	isFix = body['IsFix'] if 'IsFix' in keys else 1
+	except:
+		# 出發、抵達時間
+		liberationDT = request.args.get('LiberationDT', type=str)
+		arrivalDT = request.args.get('ArrivalDT', type=str)
+
+		# 日出、日落時間
+		sunriseTime = request.args.get('SunriseTime', type=str, default='06:00:00')
+		sunsetTime = request.args.get('SunsetTime', type=str, default='18:00:00')
+
+		# 判斷是否計算夜間時間
+		isFix = request.args.get('IsFix', type=int, default=1)
 
 	liberationDT = dt.strptime(liberationDT, '%Y-%m-%d %H:%M:%S')
 	arrivalDT = dt.strptime(arrivalDT, '%Y-%m-%d %H:%M:%S')
@@ -76,22 +89,23 @@ def FlyTime():
 def GPSDistance():
 	print('================GPSDistance===================')
 
-	# startLongitude = request.args.get('StartLongitude', type=float, default=0)
-	# startLatitude = request.args.get('StartLatitude', type=float, default=0)
-	# endLongitude = request.args.get('EndLongitude', type=float, default=0)
-	# endLatitude = request.args.get('EndLatitude', type=float, default=0)
+	try:
+		body = request.get_json()
+		keys = body.keys()
 
-	body = request.get_json()
-	keys = body.keys()
+		startLongitude = body['StartLongitude'] if 'StartLongitude' in keys else 0
+		startLatitude = body['StartLatitude'] if 'StartLatitude' in keys else 0
+		endLongitude = body['EndLongitude'] if 'EndLongitude' in keys else 0
+		endLatitude = body['EndLatitude'] if 'EndLatitude' in keys else 0
 
-	startLongitude = body['StartLongitude'] if 'StartLongitude' in keys else 0
-	startLatitude = body['StartLatitude'] if 'StartLatitude' in keys else 0
-	endLongitude = body['EndLongitude'] if 'EndLongitude' in keys else 0
-	endLatitude = body['EndLatitude'] if 'EndLatitude' in keys else 0
+	except:
+		startLongitude = request.args.get('StartLongitude', type=float, default=0)
+		startLatitude = request.args.get('StartLatitude', type=float, default=0)
+		endLongitude = request.args.get('EndLongitude', type=float, default=0)
+		endLatitude = request.args.get('EndLatitude', type=float, default=0)
 
 	result = calGPSDistance(startLongitude, startLatitude, endLongitude, endLatitude)
 	return str(result)
-
 
 if __name__ == "__main__":
 	# Only for debugging while developing
